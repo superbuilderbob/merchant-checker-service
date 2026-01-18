@@ -1,0 +1,58 @@
+buildscript {
+	dependencies {
+		classpath("org.postgresql:postgresql:42.7.8")
+		classpath("org.flywaydb:flyway-database-postgresql:11.4.1")
+	}
+}
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.1'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.flywaydb.flyway' version '11.14.1'
+}
+
+group = 'com.gomcc'
+version = '0.0.1-SNAPSHOT'
+description = 'Service is responsible for accepting merchant_name or substrings of merchant_name to perform fuzzy lookup and returning merchant information merchant_name, merchant_description, merchant_category_code, mode_of_payment'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-flyway'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.flywaydb:flyway-database-postgresql'
+	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+	runtimeOnly 'org.postgresql:postgresql'
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-redis-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-flyway-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+flyway {
+	url = 'jdbc:postgresql://localhost:5432/dev-merchant-checker'
+	driver = 'org.postgresql.Driver'
+	user = 'dev-bobby'
+	password = 'dev-bobby'
+	schemas = ["merchant-checker"]
+	defaultSchema = "merchant-checker"
+}
+

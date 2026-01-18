@@ -1,0 +1,15 @@
+services:
+  postgres:
+    container_name: "staging-db"
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=staging-merchant-checker'
+      - 'POSTGRES_PASSWORD=staging-bobby'
+      - 'POSTGRES_USER=staging-bobby'
+    ports:
+      - '5432:5432'
+  redis:
+    container_name: "staging-redis"
+    image: 'redis:latest'
+    ports:
+      - '6379'
