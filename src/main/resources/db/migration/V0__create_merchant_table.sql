@@ -1,3 +1,5 @@
+SET schema 'public';
+
 CREATE TABLE IF NOT EXISTS merchant (
     id INT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
