@@ -54,7 +54,7 @@ flyway {
 	driver = 'org.postgresql.Driver'
 	user = 'dev-bobby'
 	password = 'dev-bobby'
-	schemas = ["merchant-checker"]
-	defaultSchema = "merchant-checker"
+	schemas = ["public"]
+	defaultSchema = "public"
 }
 

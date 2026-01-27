@@ -1,0 +1,3 @@
+CREATE TYPE merchant_mode_of_payment_type AS ENUM ('ONLINE_WEB','ONLINE_IN_APP','OFFLINE_MOBILE_WALLET','OFFLINE_CARD_TAP');
+
+

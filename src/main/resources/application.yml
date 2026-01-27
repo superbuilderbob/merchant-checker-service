@@ -5,6 +5,8 @@ spring:
     locations: classpath:/db/migration
     baselineOnMigrate: true
     enabled: true
+    schemas: public
+    default-schema: public
   profiles:
     active: dev
   jpa:

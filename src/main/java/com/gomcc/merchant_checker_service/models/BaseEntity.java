@@ -2,6 +2,7 @@ package com.gomcc.merchant_checker_service.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,9 +18,11 @@ public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
+    @NotNull
     private ZonedDateTime createdAt;
+    @NotNull
     private ZonedDateTime updatedAt;
 
     @PrePersist

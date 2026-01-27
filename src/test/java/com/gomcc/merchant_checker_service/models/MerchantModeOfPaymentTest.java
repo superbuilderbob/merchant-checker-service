@@ -16,8 +16,11 @@ public class MerchantModeOfPaymentTest {
         Stream<Arguments> args = Stream.of(
                 Arguments.of(MerchantModeOfPayment.ONLINE_WEB, "online"),
                 Arguments.of(MerchantModeOfPayment.ONLINE_IN_APP, "online"),
+                Arguments.of(MerchantModeOfPayment.ONLINE_SHOPBACKPAY, "online"),
+                Arguments.of(MerchantModeOfPayment.ONLINE_FAVEPAY, "online"),
+                Arguments.of(MerchantModeOfPayment.ONLINE_KRISPAY, "online"),
                 Arguments.of(MerchantModeOfPayment.OFFLINE_MOBILE_WALLET, "offline"),
-                Arguments.of(MerchantModeOfPayment.OFFLINE_CARD_TAP, "offline")
+                Arguments.of(MerchantModeOfPayment.OFFLINE_PHYSICAL_CARD, "offline")
         );
 
         return args;
