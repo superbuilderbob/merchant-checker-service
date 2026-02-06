@@ -1,4 +1,4 @@
-package com.gomcc.merchant_checker_service.models;
+package com.gomcc.merchant_checker_service.model;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +13,8 @@ public class MerchantModeOfPaymentTest {
     */
     // From {https://pradeesh-kumar.medium.com/parameterized-test-in-junit-85e7daec677b}
     private static Stream<Arguments> merchantModeOfPaymentEnumSource(){
-        Stream<Arguments> args = Stream.of(
+
+        return Stream.of(
                 Arguments.of(MerchantModeOfPayment.ONLINE_WEB, "online"),
                 Arguments.of(MerchantModeOfPayment.ONLINE_IN_APP, "online"),
                 Arguments.of(MerchantModeOfPayment.ONLINE_SHOPBACKPAY, "online"),
@@ -22,8 +23,6 @@ public class MerchantModeOfPaymentTest {
                 Arguments.of(MerchantModeOfPayment.OFFLINE_MOBILE_WALLET, "offline"),
                 Arguments.of(MerchantModeOfPayment.OFFLINE_PHYSICAL_CARD, "offline")
         );
-
-        return args;
     }
 
     @ParameterizedTest

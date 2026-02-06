@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
  * created_at: timestamp
  * updated_at: timestamp
  */
-@Data()
+@Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
