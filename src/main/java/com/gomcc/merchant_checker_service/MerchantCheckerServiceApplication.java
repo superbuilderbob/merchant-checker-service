@@ -1,10 +1,12 @@
 package com.gomcc.merchant_checker_service;
 
-import com.gomcc.merchant_checker_service.models.MerchantModeOfPayment;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+//@EnableCaching
 public class MerchantCheckerServiceApplication {
 
 	public static void main(String[] args) {

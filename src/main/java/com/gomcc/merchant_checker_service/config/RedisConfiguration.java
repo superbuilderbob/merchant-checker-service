@@ -9,7 +9,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import java.time.Duration;
 
 @Configuration
-public class RedisConfig {
+public class RedisConfiguration {
     private final Duration CACHE_ABSOLUTE_TTL = Duration.ofMinutes(1);
 
     @Bean

@@ -1,4 +1,6 @@
 spring:
+  cache:
+    cache-names: dev-merchant-name
   datasource:
     url: jdbc:postgresql://localhost:5432/dev-merchant-checker
     username: dev-bobby
@@ -7,3 +9,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+    show-sql: true
+  data:
+    redis:
+      port: 6379
+      host: localhost
+server:
+  port: 8090

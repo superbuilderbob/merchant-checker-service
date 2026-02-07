@@ -1,15 +1,12 @@
-package com.gomcc.merchant_checker_service.utilities.cache;
+package com.gomcc.merchant_checker_service.utility.cache;
 
-import com.gomcc.merchant_checker_service.models.Merchant;
-import com.gomcc.merchant_checker_service.repositories.MerchantRepository;
-import com.gomcc.merchant_checker_service.services.MerchantService;
+import com.gomcc.merchant_checker_service.model.Merchant;
+import com.gomcc.merchant_checker_service.service.MerchantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -27,9 +24,9 @@ public class RedisCacheWarmer implements CommandLineRunner {
 
 
     @Override
-    @Async
+    @Async("taskExecutor")
     public void run(String... args) {
-        List<Merchant> merchants = merchantService.list();
+//        List<Merchant> merchants = merchantService.list();
 //        merchants.stream().forEach()
 
     }

@@ -1,4 +1,6 @@
 spring:
+  cache:
+    type: redis
   application:
     name: merchant-checker-service
   flyway:
@@ -15,5 +17,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           time_zone: UTC # sets zonedDateTime to UTC
-
-
+  docker:
+    compose:
+      enabled: false

@@ -1,4 +1,4 @@
-package com.gomcc.merchant_checker_service.models;
+package com.gomcc.merchant_checker_service.model;
 
 
 import jakarta.persistence.*;

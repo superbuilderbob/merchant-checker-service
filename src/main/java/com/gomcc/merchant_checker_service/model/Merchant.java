@@ -1,11 +1,11 @@
-package com.gomcc.merchant_checker_service.models;
+package com.gomcc.merchant_checker_service.model;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -25,8 +25,7 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @SuperBuilder
 @Entity
 public class Merchant extends BaseEntity{
@@ -34,22 +33,23 @@ public class Merchant extends BaseEntity{
     @Column(name="name", nullable = false)
     @NotNull
     @NotBlank
-    private String name;
+    private final String name;
 
     @Column(name="mcc", nullable = false)
     @NotNull
     @NotBlank
-    private Long mcc; // cannot be null
+    private final Long mcc; // cannot be null
 
     @Column(name="description", nullable = false)
     @NotNull
     @NotBlank
-    private String description; // cannot be null
+    private final String description; // cannot be null
 
     @Column(name="mode_of_payment", nullable = false)
     @NotNull
     @NotBlank
-    private MerchantModeOfPayment mode; // cannot be null
+    @Enumerated(EnumType.STRING)
+    private final MerchantModeOfPayment mode; // cannot be null
 
 
 

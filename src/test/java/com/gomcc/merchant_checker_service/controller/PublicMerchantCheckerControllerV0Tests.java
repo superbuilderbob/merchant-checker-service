@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest
-public class PublicMerchantCheckerControllerV0Test {
+public class PublicMerchantCheckerControllerV0Tests {
 
     @MockitoBean
     private MerchantService merchantService;

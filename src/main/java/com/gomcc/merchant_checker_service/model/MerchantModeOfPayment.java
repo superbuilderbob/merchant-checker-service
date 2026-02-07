@@ -1,4 +1,4 @@
-package com.gomcc.merchant_checker_service.models;
+package com.gomcc.merchant_checker_service.model;
 
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public enum MerchantModeOfPayment {
     @Getter
     private final String mode;
 
-    private MerchantModeOfPayment(String mode){
+    MerchantModeOfPayment(String mode){
         this.mode = mode;
     }
 

@@ -2,13 +2,14 @@ package com.gomcc.merchant_checker_service.exception;
 
 import lombok.Getter;
 
-public enum CustomErrorCode {
-    TYPE_MISMATCH("TYPE_MISMATCH");
+public enum ErrorCode {
+    TYPE_MISMATCH("TYPE_MISMATCH"),
+    NOT_FOUND("NOT_FOUND");
 
     @Getter
     private final String errorCode;
 
-    CustomErrorCode(String errorCode){
+    ErrorCode(String errorCode){
         this.errorCode = errorCode;
     }
 }
