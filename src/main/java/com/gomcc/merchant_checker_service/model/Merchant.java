@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
+
 /**
  * Merchant data model
  *
@@ -28,7 +30,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(force = true)
 @SuperBuilder
 @Entity
-public class Merchant extends BaseEntity{
+public class Merchant extends BaseEntity implements Serializable {
 
     @Column(name="name", nullable = false)
     @NotNull
