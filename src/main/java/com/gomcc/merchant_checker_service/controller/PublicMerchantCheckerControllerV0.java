@@ -4,16 +4,15 @@ package com.gomcc.merchant_checker_service.controller;
 import com.gomcc.merchant_checker_service.model.Merchant;
 import com.gomcc.merchant_checker_service.service.CacheInspectionService;
 import com.gomcc.merchant_checker_service.service.MerchantService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -27,7 +26,7 @@ public class PublicMerchantCheckerControllerV0 {
     private final CacheManager cacheManager;
 
     @GetMapping(path = "/{merchantId}")
-    public ResponseEntity<Merchant> getMerchantName(@PathVariable Long merchantId) {
+    public ResponseEntity<Merchant> getMerchantById(@PathVariable Long merchantId) {
 
         Merchant result = merchantService.findMerchantById(merchantId);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -44,7 +43,7 @@ public class PublicMerchantCheckerControllerV0 {
 
     @GetMapping(path = "/cache-key")
     public ResponseEntity<String> getCacheKey(){
-//        String cacheName = cacheInspectionService.getCacheNames().toString();
+        String cacheName = cacheInspectionService.getCacheNames().toString();
         return ResponseEntity.ok().body("OK");
     }
 }

@@ -3,12 +3,14 @@ package com.gomcc.merchant_checker_service.controller;
 
 import com.gomcc.merchant_checker_service.exception.ErrorCode;
 import com.gomcc.merchant_checker_service.exception.ResourceNotFoundException;
+import com.gomcc.merchant_checker_service.service.CacheInspectionService;
 import com.gomcc.merchant_checker_service.service.MerchantService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,11 +21,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest
+@WebMvcTest(PublicMerchantCheckerControllerV0.class)
 public class PublicMerchantCheckerControllerV0Tests {
 
     @MockitoBean
     private MerchantService merchantService;
+
+    @MockitoBean
+    private CacheInspectionService cacheInspectionService;
+
+    @MockitoBean
+    private CacheManager cacheManager;
 
     @Autowired
     private MockMvc mockMvc;

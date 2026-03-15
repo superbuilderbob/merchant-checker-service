@@ -1,15 +1,16 @@
 package com.gomcc.merchant_checker_service.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
  * Merchant data model
@@ -26,11 +27,23 @@ import java.io.Serializable;
  * updated_at: timestamp
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(force = true)
-@SuperBuilder
+@AllArgsConstructor
+@Builder
 @Entity
-public class Merchant extends BaseEntity implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonTypeInfo( use = JsonTypeInfo.Id.CLASS, property = "@class")
+public class Merchant{
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    private ZonedDateTime createdAt;
+
+    @NotNull
+    private ZonedDateTime updatedAt;
 
     @Column(name="name", nullable = false)
     @NotNull
@@ -53,6 +66,13 @@ public class Merchant extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private final MerchantModeOfPayment mode; // cannot be null
 
+    @PrePersist
+    public void prePersist() {
+        createdAt = ZonedDateTime.now(ZoneId.of("Z"));
+    }
 
-
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = ZonedDateTime.now(ZoneId.of("Z"));
+    }
 }

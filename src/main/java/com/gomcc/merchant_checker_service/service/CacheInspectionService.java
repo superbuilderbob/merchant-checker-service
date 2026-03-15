@@ -21,8 +21,6 @@ public class CacheInspectionService {
     public void printCache(String cacheName){
         Cache cache = cacheManager.getCache(cacheName);
 
-        if (cache != null){
-        }
     }
 
     public List<String> getCachekeys(String cacheName){

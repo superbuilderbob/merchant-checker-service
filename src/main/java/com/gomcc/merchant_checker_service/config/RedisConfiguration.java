@@ -1,24 +1,61 @@
 package com.gomcc.merchant_checker_service.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.gomcc.merchant_checker_service.model.Merchant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-import tools.jackson.databind.ObjectMapper;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
+import java.util.LinkedHashMap;
+
+import static com.fasterxml.jackson.databind.DeserializationFeature.*;
 
 @Configuration
+@DependsOn("startupObjectMapper")
 public class RedisConfiguration {
-    private final Duration CACHE_ABSOLUTE_TTL = Duration.ofMinutes(1);
-    ObjectMapper mapper = new ObjectMapper();
 
-    @Bean(name = "RedisCacheManager")
+//    private final ObjectMapper mapper;
+//
+//    public RedisConfiguration(ObjectMapper mapper){
+//        this.mapper = mapper;
+//    }
+
+    private final Duration CACHE_ABSOLUTE_TTL = Duration.ofMinutes(1);
+
+//    @Bean(name = "Cache Configuration")
+//    public RedisCacheConfiguration cacheConfiguration(){
+//
+//        return RedisCacheConfiguration.defaultCacheConfig()
+//                .serializeKeysWith(RedisSerializationContext.SerializationPair
+//                        .fromSerializer(new StringRedisSerializer()))
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair
+//                        .fromSerializer(new GenericJacksonJsonRedisSerializer(mapper)));
+//    }
+    @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
+                mapper.activateDefaultTyping(
+                mapper.getPolymorphicTypeValidator(),
+                ObjectMapper.DefaultTyping.NON_FINAL,
+                JsonTypeInfo.As.PROPERTY
+        );
+
+        System.out.println("initializing redisCacheManager");
+
+//        System.out.println(mapper.typ);
+        System.out.println("redisCacheManager:::" + mapper.isEnabled(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES));
+
+//        mapper.convertValue(LinkedHashMap.class, Merchant.class);
         return RedisCacheManager
                 .builder(redisConnectionFactory)
                 .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(CACHE_ABSOLUTE_TTL))
@@ -30,7 +67,21 @@ public class RedisConfiguration {
                 .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()
                         .serializeValuesWith(
                                 RedisSerializationContext.SerializationPair
-                                        .fromSerializer(new GenericJacksonJsonRedisSerializer(mapper))))
+//                                        .fromSerializer(new GenericJackson2JsonRedisSerializer(mapper))))
+                                        .fromSerializer(new JacksonJsonRedisSerializer<>(Merchant.class))))
                 .build();
+    }
+
+    @Bean(name = "RedisTemplate")
+    public RedisTemplate<String, Merchant> redisTemplate(RedisConnectionFactory redisConnectionFactory){
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.convertValue(LinkedHashMap.class, Merchant.class);
+
+        RedisTemplate<String, Merchant> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new JacksonJsonRedisSerializer<>(Merchant.class));
+
+        return redisTemplate;
     }
 }
