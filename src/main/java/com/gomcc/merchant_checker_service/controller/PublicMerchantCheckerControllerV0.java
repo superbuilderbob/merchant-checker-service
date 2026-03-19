@@ -1,6 +1,7 @@
 package com.gomcc.merchant_checker_service.controller;
 
 
+import com.gomcc.merchant_checker_service.dto.MerchantResponseDto;
 import com.gomcc.merchant_checker_service.model.Merchant;
 import com.gomcc.merchant_checker_service.service.CacheInspectionService;
 import com.gomcc.merchant_checker_service.service.MerchantService;
@@ -21,14 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class PublicMerchantCheckerControllerV0 {
 
     private final MerchantService merchantService;
+
     private final CacheInspectionService cacheInspectionService;
 
     private final CacheManager cacheManager;
 
     @GetMapping(path = "/{merchantId}")
-    public ResponseEntity<Merchant> getMerchantById(@PathVariable Long merchantId) {
+//    public ResponseEntity<Merchant> getMerchantById(@PathVariable Long merchantId) {
+    public ResponseEntity<MerchantResponseDto> getMerchantById(@PathVariable Long merchantId) {
 
-        Merchant result = merchantService.findMerchantById(merchantId);
+        MerchantResponseDto result = merchantService.findMerchantById(merchantId);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }

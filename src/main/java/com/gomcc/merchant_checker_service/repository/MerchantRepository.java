@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MerchantRepository extends JpaRepository<Merchant, Long> {
+
+    // add @Query block to fuzzy lookup based on merchant_name
+
 }

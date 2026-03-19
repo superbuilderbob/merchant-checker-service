@@ -32,7 +32,6 @@ import java.time.ZonedDateTime;
 @Builder
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@JsonTypeInfo( use = JsonTypeInfo.Id.CLASS, property = "@class")
 public class Merchant{
 
     @Id

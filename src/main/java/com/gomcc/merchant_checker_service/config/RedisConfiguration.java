@@ -1,8 +1,9 @@
 package com.gomcc.merchant_checker_service.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gomcc.merchant_checker_service.model.Merchant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -10,36 +11,18 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.*;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
-import java.util.LinkedHashMap;
-
-import static com.fasterxml.jackson.databind.DeserializationFeature.*;
 
 @Configuration
 @DependsOn("startupObjectMapper")
 public class RedisConfiguration {
 
-//    private final ObjectMapper mapper;
-//
-//    public RedisConfiguration(ObjectMapper mapper){
-//        this.mapper = mapper;
-//    }
-
     private final Duration CACHE_ABSOLUTE_TTL = Duration.ofMinutes(1);
 
-//    @Bean(name = "Cache Configuration")
-//    public RedisCacheConfiguration cacheConfiguration(){
-//
-//        return RedisCacheConfiguration.defaultCacheConfig()
-//                .serializeKeysWith(RedisSerializationContext.SerializationPair
-//                        .fromSerializer(new StringRedisSerializer()))
-//                .serializeValuesWith(RedisSerializationContext.SerializationPair
-//                        .fromSerializer(new GenericJacksonJsonRedisSerializer(mapper)));
-//    }
     @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         ObjectMapper mapper = new ObjectMapper();
