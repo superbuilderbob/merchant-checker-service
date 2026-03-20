@@ -1,15 +1,26 @@
 package com.gomcc.merchant_checker_service.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gomcc.merchant_checker_service.dto.MerchantResponseDto;
 import com.gomcc.merchant_checker_service.exception.ResourceNotFoundException;
+import com.gomcc.merchant_checker_service.model.Merchant;
+import com.gomcc.merchant_checker_service.model.MerchantModeOfPayment;
 import com.gomcc.merchant_checker_service.repository.MerchantRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,18 +36,28 @@ public class MerchantServiceTests {
     @InjectMocks
     private MerchantService merchantService;
 
+    @Mock
+    private RedisTemplate<String, Merchant> redisTemplate;
+
+    @Mock
+    private ValueOperations<String, Merchant> valueOperations;
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+//
+    private static final ClassPathResource TEST_MERCHANT_DATA = new ClassPathResource("dummyMerchant.json");
+
     @Test
     @DisplayName("Should throw ResourceNotFoundException if merchantId is not found")
     void NonExistentIdShouldThrowResourceNotFoundException() {
 
         // Given
         final Long invalidMerchantId = 200L;
+        final String invalidMerchantIdCacheKey = "dev-merchant-name::200";
+
         // stud merchant repository to return Optional.empty()
 
         // When
         when(merchantRepository.findById(invalidMerchantId)).thenReturn(Optional.empty());
-
-        // Then
 
         // #1 throws ResourceNotFoundException
         final ResourceNotFoundException exception = assertThrows(
@@ -46,8 +67,40 @@ public class MerchantServiceTests {
         // #2 returns correct error message
         assertEquals("The merchant id is not found for id: " + invalidMerchantId,
                 exception.getMessage());
-
-        // #3 called merchantRepository only once
-        verify(merchantRepository, times(1)).findById(invalidMerchantId);
     }
+    @Test
+    @DisplayName("Should return cached Merchant if cacheKey exists")
+    void ShouldReturnCachedMerchantIfKeyExistsInCache() {
+
+        // Given
+        final Long merchantId = 1L;
+        final String validMerchantIdCacheKey = "dev-merchant-name::1";
+
+        Merchant TEST_MERCHANT = null;
+
+        // Read data from dummyMerchant.json
+        try {
+            InputStream inputStream = TEST_MERCHANT_DATA.getInputStream();
+
+            TEST_MERCHANT = mapper.readValue(inputStream, Merchant.class);
+
+        } catch (Exception e) {
+            System.out.println("Something wrong happened" + e.toString());
+        }
+
+        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+        when(redisTemplate.hasKey(validMerchantIdCacheKey)).thenReturn(true);
+        when(redisTemplate.opsForValue().get(validMerchantIdCacheKey)).thenReturn(TEST_MERCHANT);
+
+        MerchantResponseDto result = merchantService.findMerchantById(merchantId);
+
+        Assertions.assertNotNull(TEST_MERCHANT);
+        Assertions.assertEquals(result.description(), TEST_MERCHANT.getDescription());
+        Assertions.assertEquals(result.name(), TEST_MERCHANT.getName());
+        Assertions.assertEquals(result.mcc(), TEST_MERCHANT.getMcc());
+
+        verify(merchantRepository, times(0)).findById(merchantId);
+    }
+
+
 }

@@ -1,0 +1,7 @@
+{
+  "id": 10,
+  "name": "Test Merchant",
+  "mcc": 1234,
+  "description": "Test Merchant Description",
+  "mode": null
+}

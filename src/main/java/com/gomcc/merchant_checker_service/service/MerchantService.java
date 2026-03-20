@@ -20,22 +20,25 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MerchantService {
 
-    final String CACHE_NAME = "dev-merchant-name";
+    final String CACHE_NAME = "dev-merchant-name::";
     private final MerchantRepository merchantRepository;
+
+    // To Do: Move redisTemplate calls into CacheService
     private final RedisTemplate<String, Merchant> redisTemplate;
-//    private final CacheService cacheService;
+
+
 
     public List<Merchant> findAllMerchants() {
         return merchantRepository.findAll();
     }
 
-//    @Cacheable(value=CACHE_NAME, key = "#id")
     public MerchantResponseDto findMerchantById(Long id) {
 
+        String cacheKey = CACHE_NAME + id.toString();
         // if key exists in Redis
-        if (redisTemplate.hasKey(id.toString())){
-            log.info("Cache hit for merchant id: {}", id.toString());
-            Merchant m = redisTemplate.opsForValue().get(id.toString());
+        if (redisTemplate.hasKey(cacheKey)){
+            log.info("Cache hit for merchant id: {}", cacheKey);
+            Merchant m = redisTemplate.opsForValue().get(cacheKey);
             assert m != null;
             MerchantResponseDto dto = new MerchantResponseDto(m.getName(), m.getMcc(), m.getDescription());
             return dto;
@@ -45,7 +48,7 @@ public class MerchantService {
         Optional<Merchant> m = merchantRepository.findById(id);
 
         if (m.isPresent()){
-            redisTemplate.opsForValue().set(CACHE_NAME +"::" +id, m.get()); // dev-merchant-name::1
+            redisTemplate.opsForValue().set(cacheKey, m.get()); // dev-merchant-name::1
             return new MerchantResponseDto(
                     m.get().getName(),
                     m.get().getMcc(),
