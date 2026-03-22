@@ -25,11 +25,11 @@ public class RedisCacheWarmer implements ApplicationListener<ContextRefreshedEve
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-//        List<Merchant> existingMerchants = merchantRepository.findAll();
-//        existingMerchants.forEach(merchant -> {
-//                    merchantService.findMerchantById(merchant.getId());
-//                    System.out.printf("Caching merchant:: %s\n", merchant.getName());
-//                }
-//        );
+        List<Merchant> existingMerchants = merchantRepository.findAll();
+        existingMerchants.forEach(merchant -> {
+                    merchantService.findMerchantById(merchant.getId());
+                    System.out.printf("Caching merchant:: %s\n", merchant.getName());
+                }
+        );
     }
 }

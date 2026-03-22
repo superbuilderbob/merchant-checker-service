@@ -36,6 +36,13 @@ public class PublicMerchantCheckerControllerV0 {
 
     }
 
+    @GetMapping(path = "/miles/{searchWord}")
+//    public ResponseEntity<Merchant> getMerchantById(@PathVariable Long merchantId) {
+    public ResponseEntity<String> getSearchWord(@PathVariable String searchWord) {
+        String result = merchantService.getMiles(searchWord);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     //  ** Below endpoints should be moved to internal endpoints
     @GetMapping(path = "/cache-name")
     public ResponseEntity<String> getCacheName(){

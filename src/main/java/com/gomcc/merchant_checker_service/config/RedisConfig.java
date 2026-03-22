@@ -19,7 +19,7 @@ import java.time.Duration;
 
 @Configuration
 @DependsOn("startupObjectMapper")
-public class RedisConfiguration {
+public class RedisConfig {
 
     private final Duration CACHE_ABSOLUTE_TTL = Duration.ofMinutes(1);
 
@@ -50,7 +50,6 @@ public class RedisConfiguration {
                 .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()
                         .serializeValuesWith(
                                 RedisSerializationContext.SerializationPair
-//                                        .fromSerializer(new GenericJackson2JsonRedisSerializer(mapper))))
                                         .fromSerializer(new JacksonJsonRedisSerializer<>(Merchant.class))))
                 .build();
     }

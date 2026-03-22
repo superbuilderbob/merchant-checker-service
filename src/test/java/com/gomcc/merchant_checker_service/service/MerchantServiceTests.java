@@ -44,7 +44,6 @@ public class MerchantServiceTests {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 //
-    private static final ClassPathResource TEST_MERCHANT_DATA = new ClassPathResource("dummyMerchant.json");
 
     @Test
     @DisplayName("Should throw ResourceNotFoundException if merchantId is not found")
@@ -73,34 +72,47 @@ public class MerchantServiceTests {
     void ShouldReturnCachedMerchantIfKeyExistsInCache() {
 
         // Given
-        final Long merchantId = 1L;
+        final Long validMerchantId = 1L;
         final String validMerchantIdCacheKey = "dev-merchant-name::1";
 
-        Merchant TEST_MERCHANT = null;
+        Optional<Merchant> TEST_MERCHANT = generateTestMerchant();
+        Assertions.assertTrue(TEST_MERCHANT.isPresent());
 
-        // Read data from dummyMerchant.json
-        try {
-            InputStream inputStream = TEST_MERCHANT_DATA.getInputStream();
-
-            TEST_MERCHANT = mapper.readValue(inputStream, Merchant.class);
-
-        } catch (Exception e) {
-            System.out.println("Something wrong happened" + e.toString());
-        }
-
+        // When
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
         when(redisTemplate.hasKey(validMerchantIdCacheKey)).thenReturn(true);
-        when(redisTemplate.opsForValue().get(validMerchantIdCacheKey)).thenReturn(TEST_MERCHANT);
+        when(redisTemplate.opsForValue().get(validMerchantIdCacheKey)).thenReturn(TEST_MERCHANT.get());
 
-        MerchantResponseDto result = merchantService.findMerchantById(merchantId);
+        MerchantResponseDto result = merchantService.findMerchantById(validMerchantId);
 
-        Assertions.assertNotNull(TEST_MERCHANT);
-        Assertions.assertEquals(result.description(), TEST_MERCHANT.getDescription());
-        Assertions.assertEquals(result.name(), TEST_MERCHANT.getName());
-        Assertions.assertEquals(result.mcc(), TEST_MERCHANT.getMcc());
+        // Assert
+        Assertions.assertNotNull(TEST_MERCHANT.get());
+        Assertions.assertEquals(result.description(), TEST_MERCHANT.get().getDescription());
+        Assertions.assertEquals(result.name(), TEST_MERCHANT.get().getName());
+        Assertions.assertEquals(result.mcc(), TEST_MERCHANT.get().getMcc());
 
-        verify(merchantRepository, times(0)).findById(merchantId);
+        // Verify
+        verify(merchantRepository, times(0)).findById(validMerchantId);
     }
 
 
+    public static Optional<Merchant> generateTestMerchant(){
+        /*
+        Generate Test Merchant data from dummyMerchant.json
+
+        */
+        final ClassPathResource TEST_MERCHANT_DATA = new ClassPathResource("dummyMerchant.json");
+
+        try {
+            InputStream inputStream = TEST_MERCHANT_DATA.getInputStream();
+
+            final Merchant TEST_MERCHANT = mapper.readValue(inputStream, Merchant.class);
+
+            return Optional.of(TEST_MERCHANT);
+
+        } catch (Exception e) {
+            System.out.println("Something wrong happened" + e.toString());
+            return Optional.empty();
+        }
+    }
 }
