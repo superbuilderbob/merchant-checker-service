@@ -111,7 +111,7 @@ public class MerchantServiceTests {
             return Optional.of(TEST_MERCHANT);
 
         } catch (Exception e) {
-            System.out.println("Something wrong happened" + e.toString());
+            System.out.println("Something wrong happened" + e);
             return Optional.empty();
         }
     }

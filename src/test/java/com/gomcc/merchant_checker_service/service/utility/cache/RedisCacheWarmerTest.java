@@ -27,13 +27,6 @@ public class RedisCacheWarmerTest {
 
     private static final String CACHE_NAME = "dev-merchant-name";
     private static final String TEST_KEY = "TEST";
-//    final Merchant TEST_MERCHANT = Merchant.builder()
-//            .id(10L)
-//            .name("Test Merchant")
-//            .mcc(1234L)
-//            .description("Test Merchant Description")
-//            .mode(MerchantModeOfPayment.ONLINE_WEB)
-//            .build();
 
     final Merchant TEST_MERCHANT = MerchantServiceTests.generateTestMerchant().orElse(
             Merchant.builder()

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gomcc.merchant_checker_service.model.Merchant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -18,7 +17,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.time.Duration;
 
 @Configuration
-@DependsOn("startupObjectMapper")
 public class RedisConfig {
 
     private final Duration CACHE_ABSOLUTE_TTL = Duration.ofMinutes(1);
@@ -56,8 +54,6 @@ public class RedisConfig {
 
     @Bean(name = "RedisTemplate")
     public RedisTemplate<String, Merchant> redisTemplate(RedisConnectionFactory redisConnectionFactory){
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.convertValue(LinkedHashMap.class, Merchant.class);
 
         RedisTemplate<String, Merchant> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
