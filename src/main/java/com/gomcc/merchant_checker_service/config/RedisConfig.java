@@ -41,12 +41,10 @@ public class RedisConfig {
                 .builder(redisConnectionFactory)
                 .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(CACHE_ABSOLUTE_TTL))
                 .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().disableCachingNullValues())
-                .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()
-                        .serializeKeysWith(
+                .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().serializeKeysWith(
                                 RedisSerializationContext.SerializationPair
                                         .fromSerializer(new StringRedisSerializer())))
-                .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()
-                        .serializeValuesWith(
+                .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(
                                 RedisSerializationContext.SerializationPair
                                         .fromSerializer(new JacksonJsonRedisSerializer<>(Merchant.class))))
                 .build();
@@ -59,7 +57,11 @@ public class RedisConfig {
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new JacksonJsonRedisSerializer<>(Merchant.class));
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new JacksonJsonRedisSerializer<>(Merchant.class));
 
+        redisTemplate.afterPropertiesSet();
+        
         return redisTemplate;
     }
 }

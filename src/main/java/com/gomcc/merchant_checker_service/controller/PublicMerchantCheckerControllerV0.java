@@ -11,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,11 +27,22 @@ public class PublicMerchantCheckerControllerV0 {
 
     private final CacheManager cacheManager;
 
+    // To be deprecated and use `merchantName`
     @GetMapping(path = "/{merchantId}")
 //    public ResponseEntity<Merchant> getMerchantById(@PathVariable Long merchantId) {
     public ResponseEntity<MerchantResponseDto> getMerchantById(@PathVariable Long merchantId) {
 
         MerchantResponseDto result = merchantService.findMerchantById(merchantId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    @GetMapping(path = "/name/{merchantName}")
+//    public ResponseEntity<Merchant> getMerchantById(@PathVariable Long merchantId) {
+    public ResponseEntity<List<MerchantResponseDto>> getMerchantByName(
+            @PathVariable String merchantName) {
+
+        List<MerchantResponseDto> result = merchantService.fuzzyFindMerchantByName(merchantName);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }

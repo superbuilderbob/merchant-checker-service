@@ -6,6 +6,7 @@ import com.gomcc.merchant_checker_service.service.MerchantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,11 +21,16 @@ public class RedisCacheWarmer implements ApplicationListener<ContextRefreshedEve
      */
 
     private final MerchantRepository merchantRepository;
+
     private final MerchantService merchantService;
+
+    private final RedisTemplate<String, Merchant> redisTemplate;
+
 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+//        redisTemplate.opsFor
         List<Merchant> existingMerchants = merchantRepository.findAll();
         existingMerchants.forEach(merchant -> {
                     merchantService.findMerchantById(merchant.getId());
