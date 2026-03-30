@@ -47,7 +47,7 @@ public class RedisConfig {
                 .build();
     }
 
-    @Bean(name = "RedisTemplate")
+    @Bean
     public RedisTemplate<String, Merchant> redisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String, Merchant> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
@@ -57,7 +57,6 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(new JacksonJsonRedisSerializer<>(Merchant.class));
 
         redisTemplate.afterPropertiesSet();
-        
         return redisTemplate;
     }
 }

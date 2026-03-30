@@ -8,21 +8,18 @@ import com.gomcc.merchant_checker_service.exception.ResourceNotFoundException;
 import com.gomcc.merchant_checker_service.model.Merchant;
 import com.gomcc.merchant_checker_service.model.MerchantRedisHash;
 import com.gomcc.merchant_checker_service.model.MerchantRedisHash$;
-import com.gomcc.merchant_checker_service.repository.redis.MerchantRedisHashRepository;
 import com.gomcc.merchant_checker_service.repository.jpa.MerchantRepository;
+import com.gomcc.merchant_checker_service.repository.redis.MerchantRedisHashRepository;
 import com.gomcc.merchant_checker_service.utility.webClient.AskMilesWebClient;
 import com.redis.om.spring.search.stream.EntityStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +34,6 @@ public class MerchantService {
     private final MerchantRedisHashRepository merchantRedisHashRepository;
 
     // To Do: Move redisTemplate calls into CacheService
-    private final RedisTemplate<String, Merchant> redisTemplate;
 
     private HashOperations<String, String, Object> hashOperations;
 

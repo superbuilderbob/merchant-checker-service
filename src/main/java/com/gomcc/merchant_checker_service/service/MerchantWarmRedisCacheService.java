@@ -24,8 +24,6 @@ public class MerchantWarmRedisCacheService{
 
     private final MerchantRepository merchantRepository;
 
-    private final MerchantService merchantService;
-
     private final MerchantRedisHashRepository merchantRedisHashRepository;
 
 
@@ -33,9 +31,10 @@ public class MerchantWarmRedisCacheService{
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         log.info("Application is ready - start to warm up redis cache");
-//        preheatCache();
+        preheatCache();
     }
 
+    // TODO: Make this async and non-blocking so application can start server serving traffic sooner
     private void preheatCache() {
         // Get all rows in merchant table
         List<Merchant> existingMerchants = merchantRepository.findAll();

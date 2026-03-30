@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.Set;
-
-
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
@@ -77,7 +74,6 @@ public class RedisCacheWarmerTest {
     @Test
     @DisplayName("Preloaded cache should share same number of cache keys as rows in merchant service db")
     void PreloadedCacheShouldHaveSameNumberOfKeysAsDb(){
-        System.out.println("PreloadedCacheShouldHaveSameNumberOfKeysAsDb");
         int cacheKeyCount = merchantRedisHashRepository.findAll().size();
         int dbRows = merchantRepository.findAll().size();
         Assertions.assertEquals(cacheKeyCount, dbRows);
