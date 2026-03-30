@@ -4,6 +4,7 @@ package com.gomcc.merchant_checker_service.controller;
 import com.gomcc.merchant_checker_service.dto.MerchantResponseDto;
 import com.gomcc.merchant_checker_service.dto.AskMilesResponse;
 import com.gomcc.merchant_checker_service.dto.PublicAskMilesResponse;
+import com.gomcc.merchant_checker_service.model.MerchantRedisHash;
 import com.gomcc.merchant_checker_service.service.CacheInspectionService;
 import com.gomcc.merchant_checker_service.service.MerchantService;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping(path="/public/merchants")
 public class PublicMerchantCheckerControllerV0 {
 
@@ -25,31 +27,22 @@ public class PublicMerchantCheckerControllerV0 {
 
     private final CacheInspectionService cacheInspectionService;
 
-    private final CacheManager cacheManager;
-
-    // To be deprecated and use `merchantName`
-    @GetMapping(path = "/{merchantId}")
-//    public ResponseEntity<Merchant> getMerchantById(@PathVariable Long merchantId) {
-    public ResponseEntity<MerchantResponseDto> getMerchantById(@PathVariable Long merchantId) {
-
-        MerchantResponseDto result = merchantService.findMerchantById(merchantId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-
-    }
 
     @GetMapping(path = "/name/{merchantName}")
-//    public ResponseEntity<Merchant> getMerchantById(@PathVariable Long merchantId) {
-    public ResponseEntity<List<MerchantResponseDto>> getMerchantByName(
+    public ResponseEntity<List<MerchantResponseDto>> fuzzyGetMerchantByName(
             @PathVariable String merchantName) {
-
+        log.info("[fuzzyGetMerchantByName] input {}", merchantName);
         List<MerchantResponseDto> result = merchantService.fuzzyFindMerchantByName(merchantName);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
 
     @GetMapping(path = "/miles/{searchWord}")
-    public ResponseEntity<List<PublicAskMilesResponse>> getSearchWord(@PathVariable String searchWord) {
-        List<PublicAskMilesResponse> result = merchantService.getMiles(searchWord);
+    public ResponseEntity<List<MerchantRedisHash>> getSearchWord(
+            @PathVariable String searchWord
+
+    ) {
+            List<MerchantRedisHash> result = merchantService.merchantRedisCacheFuzzySearch(searchWord);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -1,4 +1,4 @@
-package com.gomcc.merchant_checker_service.repository;
+package com.gomcc.merchant_checker_service.repository.jpa;
 
 import com.gomcc.merchant_checker_service.dto.MerchantResponseDto;
 import com.gomcc.merchant_checker_service.model.Merchant;
@@ -21,6 +21,6 @@ public interface MerchantRepository extends JpaRepository<Merchant, Long> {
          - `kentucky` -\> `kfc`
      */
 
-    @Query(value = "SELECT m.id, m.name, m.mcc, m.description FROM public.merchant m where m.name ilike :name", nativeQuery = true)
-    Optional<List<MerchantResponseDto>> fuzzyFindMerchantByName(@Param("name") String name);
+    @Query(value = "SELECT * FROM public.merchant m where m.name ilike :name", nativeQuery = true)
+    List<Merchant> fuzzyQueryMerchantByName(@Param("name") String name);
 }

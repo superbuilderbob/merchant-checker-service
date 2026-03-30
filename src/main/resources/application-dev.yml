@@ -14,5 +14,8 @@ spring:
     redis:
       port: 6379
       host: localhost
+      client-type: JEDIS
+      repositories:
+        enabled: false
 server:
   port: 8090

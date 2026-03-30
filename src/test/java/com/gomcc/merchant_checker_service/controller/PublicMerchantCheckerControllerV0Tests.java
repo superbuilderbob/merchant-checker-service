@@ -14,6 +14,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,21 +39,21 @@ public class PublicMerchantCheckerControllerV0Tests {
 
     @Test
     void ExceptionHandlerShouldCatchMissingIdResourceNotFoundException() throws Exception{
-        Long nonExistentId = 200L;
+        final String invalidName = "thisisaninvalidname";
 
         // Stud Merchant service test result
-        when(merchantService.findMerchantById(nonExistentId))
+        when(merchantService.fuzzyFindMerchantByName(invalidName))
                 .thenThrow(new ResourceNotFoundException(
                         ErrorCode.NOT_FOUND.getErrorCode(),
                         HttpStatus.NOT_FOUND,
-                        "The merchant id is not found for id: " + nonExistentId));
+                        "Merchant name: " + invalidName + " is not found. Please try again."));
 
 
         // Test Merchant service
-        mockMvc.perform(get("/public/merchants/{merchantId}", nonExistentId))
+        mockMvc.perform(get("/public/merchants/{merchantId}", invalidName))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("NOT_FOUND"))
                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
-                .andExpect(jsonPath("$.message").value("The merchant id is not found for id: " + nonExistentId));
+                .andExpect(jsonPath("$.message").value(String.format("Merchant name: %s is not found. Please try again.", invalidName)));
     }
 }

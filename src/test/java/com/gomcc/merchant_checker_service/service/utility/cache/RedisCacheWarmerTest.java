@@ -3,7 +3,8 @@ package com.gomcc.merchant_checker_service.service.utility.cache;
 
 import com.gomcc.merchant_checker_service.model.Merchant;
 import com.gomcc.merchant_checker_service.model.MerchantModeOfPayment;
-import com.gomcc.merchant_checker_service.repository.MerchantRepository;
+import com.gomcc.merchant_checker_service.repository.jpa.MerchantRepository;
+import com.gomcc.merchant_checker_service.repository.redis.MerchantRedisHashRepository;
 import com.gomcc.merchant_checker_service.service.MerchantServiceTests;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -40,6 +40,9 @@ public class RedisCacheWarmerTest {
 
     @Autowired
     MerchantRepository merchantRepository;
+
+    @Autowired
+    MerchantRedisHashRepository merchantRedisHashRepository;
 
     /**
      * When:
@@ -75,10 +78,9 @@ public class RedisCacheWarmerTest {
     @DisplayName("Preloaded cache should share same number of cache keys as rows in merchant service db")
     void PreloadedCacheShouldHaveSameNumberOfKeysAsDb(){
         System.out.println("PreloadedCacheShouldHaveSameNumberOfKeysAsDb");
-        Set<String> cacheKeys = redisTemplate.keys(CACHE_NAME + "*");
-        int cacheKeysCount = cacheKeys.size();
+        int cacheKeyCount = merchantRedisHashRepository.findAll().size();
         int dbRows = merchantRepository.findAll().size();
-        Assertions.assertEquals(cacheKeysCount, dbRows);
+        Assertions.assertEquals(cacheKeyCount, dbRows);
     }
 
 
