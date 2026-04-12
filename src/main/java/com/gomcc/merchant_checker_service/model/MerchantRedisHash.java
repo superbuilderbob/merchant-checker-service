@@ -21,7 +21,7 @@ import org.springframework.data.redis.core.index.Indexed;
         @Id
         private Long id;  // Will be the Redis key suffix
 
-        @Searchable(sortable = true)  // Creates TEXT index for full-text/fuzzy search
+        @TextIndexed(sortable = true)  // Creates TEXT index for full-text/fuzzy search
         private String name;
 
         @Indexed  // Creates TAG index for exact filtering

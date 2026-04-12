@@ -17,7 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-public class RedisCacheWarmerTest {
+public class MerchantWarmRedisCacheServiceTest {
 
     @Autowired
     private RedisTemplate<String, Merchant> redisTemplate;

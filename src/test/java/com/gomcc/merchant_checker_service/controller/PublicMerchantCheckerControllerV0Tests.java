@@ -40,7 +40,7 @@ public class PublicMerchantCheckerControllerV0Tests {
         final String invalidName = "thisisaninvalidname";
 
 //         Stud Merchant service test result
-        when(merchantService.fuzzyFindMerchantByName(invalidName))
+        when(merchantService.fuzzySearch(invalidName))
                 .thenThrow(new ResourceNotFoundException(
                         ErrorCode.NOT_FOUND.getErrorCode(),
                         HttpStatus.NOT_FOUND,

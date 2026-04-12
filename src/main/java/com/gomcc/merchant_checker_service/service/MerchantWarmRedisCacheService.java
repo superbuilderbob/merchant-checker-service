@@ -26,8 +26,6 @@ public class MerchantWarmRedisCacheService{
 
     private final MerchantRedisHashRepository merchantRedisHashRepository;
 
-
-
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         log.info("Application is ready - start to warm up redis cache");

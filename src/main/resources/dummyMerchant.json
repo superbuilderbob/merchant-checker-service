@@ -3,5 +3,5 @@
   "name": "Test Merchant",
   "mcc": 1234,
   "description": "Test Merchant Description",
-  "mode": null
+  "mode": "ONLINE_FAVEPAY"
 }

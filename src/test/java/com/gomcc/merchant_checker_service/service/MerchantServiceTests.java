@@ -40,58 +40,6 @@ public class MerchantServiceTests {
     private ValueOperations<String, Merchant> valueOperations;
 
     private static final ObjectMapper mapper = new ObjectMapper();
-//
-
-//    @Test
-//    @DisplayName("Should throw ResourceNotFoundException if merchantId is not found")
-//    void NonExistentIdShouldThrowResourceNotFoundException() {
-//
-//        // Given
-//        final Long invalidMerchantId = 200L;
-//        final String invalidMerchantIdCacheKey = "dev-merchant-name::200";
-//
-//        // stud merchant repository to return Optional.empty()
-//
-//        // When
-//        when(merchantRepository.findById(invalidMerchantId)).thenReturn(Optional.empty());
-//
-//        // #1 throws ResourceNotFoundException
-//        final ResourceNotFoundException exception = assertThrows(
-//                ResourceNotFoundException.class,
-//                () -> merchantService.findMerchantById(invalidMerchantId)
-//        );
-//        // #2 returns correct error message
-//        assertEquals("The merchant id is not found for id: " + invalidMerchantId,
-//                exception.getMessage());
-//    }
-//    @Test
-//    @DisplayName("Should return cached Merchant if cacheKey exists")
-//    void ShouldReturnCachedMerchantIfKeyExistsInCache() {
-//
-//        // Given
-//        final Long validMerchantId = 1L;
-//        final String validMerchantIdCacheKey = "dev-merchant-name::1";
-//
-//        Optional<Merchant> TEST_MERCHANT = generateTestMerchant();
-//        Assertions.assertTrue(TEST_MERCHANT.isPresent());
-//
-//        // When
-//        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-//        when(redisTemplate.hasKey(validMerchantIdCacheKey)).thenReturn(true);
-//        when(redisTemplate.opsForValue().get(validMerchantIdCacheKey)).thenReturn(TEST_MERCHANT.get());
-//
-//        MerchantResponseDto result = merchantService.findMerchantById(validMerchantId);
-//
-//        // Assert
-//        Assertions.assertNotNull(TEST_MERCHANT.get());
-//        Assertions.assertEquals(result.description(), TEST_MERCHANT.get().getDescription());
-//        Assertions.assertEquals(result.name(), TEST_MERCHANT.get().getName());
-//        Assertions.assertEquals(result.mcc(), TEST_MERCHANT.get().getMcc());
-//
-//        // Verify
-//        verify(merchantRepository, times(0)).findById(validMerchantId);
-//    }
-
 
     public static Optional<Merchant> generateTestMerchant(){
         /*
