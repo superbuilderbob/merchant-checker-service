@@ -74,11 +74,6 @@ public class MerchantRedisServiceTests {
         registry.add("spring.redis.port", () -> redisContainer.getMappedPort(6379)); // 6379 -> 6379
     }
 
-//    @BeforeEach
-//    public void setUp(){
-//        cacheManager.getCache()
-//    }
-
     @Test
     void dockerIsAvailable() {
         assertThat(DockerClientFactory.instance().isDockerAvailable()).isTrue();
@@ -103,16 +98,4 @@ public class MerchantRedisServiceTests {
                 () -> System.out.println("TEST_MERCHANT NOT FOUND"));
 
     }
-
-    public void fuzzySearchCacheHitShouldReturnCachedMerchant(){}
-
-    @Test
-    public void fuzzySearchCacheMissAndDbExistsShouldReturnDbMerchants(){}
-
-    @Test
-    public void fuzzySearchCacheMissAndDbExistsShouldCacheMerchants(){}
-
-
-
-
 }
