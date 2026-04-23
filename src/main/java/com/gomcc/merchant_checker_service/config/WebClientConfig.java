@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class WebClientConfig {
 
+    public static String MILES_BASE_URL = "https://www.ask-miles.com/api/store";
+
     @Bean
     public WebClient webClient (WebClient.Builder builder, ClientHttpConnector clientHttpConnector){
 
@@ -28,7 +30,7 @@ public class WebClientConfig {
         int readTimeout = 6000; // 6000ms or 6s
 
         return builder
-                .baseUrl("https://www.ask-miles.com/api/store")
+                .baseUrl(MILES_BASE_URL)
                 .clientConnector(httpConnector(connectTimeout, readTimeout))
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();

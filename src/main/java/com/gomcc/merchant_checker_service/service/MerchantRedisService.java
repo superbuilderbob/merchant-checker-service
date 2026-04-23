@@ -7,6 +7,7 @@ import com.gomcc.merchant_checker_service.model.MerchantRedisHash;
 import com.gomcc.merchant_checker_service.model.MerchantRedisHash$;
 import com.gomcc.merchant_checker_service.repository.jpa.MerchantRepository;
 import com.gomcc.merchant_checker_service.repository.redis.MerchantRedisHashRepository;
+import com.gomcc.merchant_checker_service.utility.webClient.AskMilesWebClient;
 import com.redis.om.spring.search.stream.EntityStream;
 import com.redis.om.spring.search.stream.SearchStream;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class MerchantRedisService {
     private final MerchantRepository merchantRepository;
     private final MerchantRedisHashRepository merchantRedisHashRepository;
     private final EntityStream entityStream;
+    private final AskMilesWebClient askMilesWebClient;
 
     public List<MerchantResponseDto> fuzzySearch(String name){
         final String fuzzyMerchantPattern = "%" + name + "%";
@@ -78,7 +80,6 @@ public class MerchantRedisService {
          * if there are matches, returns list of Merchants that match the regex
          * if no match, returns empty list
          */
-
         SearchStream<MerchantRedisHash> stream = entityStream.of(MerchantRedisHash.class);
 
         if (name.matches(".*\\s+.*")){
@@ -99,18 +100,5 @@ public class MerchantRedisService {
                     .collect(Collectors.toList());
 
         }
-
-//        final String fuzzyMerchantPattern = "*" + name + "*";
-//
-//        log.info(fuzzyMerchantPattern);
-//
-//        // TODO 1: Add regex restriction to name to only allow empty space
-//        // TODO 2: Iterate through name pattern split by space
-//
-//
-//        return entityStream
-//                .of(MerchantRedisHash.class)
-//                .filter(MerchantRedisHash$.NAME.like(fuzzyMerchantPattern))
-//                .collect(Collectors.toList());
     }
 }
