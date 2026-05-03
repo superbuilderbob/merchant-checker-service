@@ -1,7 +1,7 @@
 # Internal
 ## query existing multiple merchants
 curl -X GET \
-    --location 'http://localhost:8090/public/merchants/name/mcd' | jq .
+    --location 'http://localhost:8090/public/merchants/name/mcdonald' | jq .
 
 ## query existing single merchant
 curl -X GET \

@@ -8,8 +8,8 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-@Builder
 @Data
+@Builder
 public class MerchantResponseDto implements Serializable{
     private final Long id;
     private final String name;

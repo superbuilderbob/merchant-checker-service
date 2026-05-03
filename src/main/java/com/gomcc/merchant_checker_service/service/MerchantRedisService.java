@@ -12,10 +12,12 @@ import com.redis.om.spring.search.stream.EntityStream;
 import com.redis.om.spring.search.stream.SearchStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,58 +30,43 @@ public class MerchantRedisService {
     private final MerchantRedisHashRepository merchantRedisHashRepository;
     private final EntityStream entityStream;
     private final AskMilesWebClient askMilesWebClient;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    private static final String DEV_CACHE_KEY_PREFIX = "dev-merchant:";
+    private static final Duration TTL = Duration.ofHours(1);
+
 
     public List<MerchantResponseDto> fuzzySearch(String name){
-        final String fuzzyMerchantPattern = "%" + name + "%";
 
-        List<MerchantRedisHash> cachedMerchant = fuzzySearchHashByPattern(name);
+        List<MerchantRedisHash> cachedMerchants = fuzzySearchHashByPattern(name);
 
-        if (CollectionUtils.isEmpty(cachedMerchant)){
-            // If cache miss -> query db -> save to cache with 24 hours ttl -> return result
-            log.info("Cache miss - querying db");
-            List<MerchantResponseDto> dbMerchants = merchantRepository
-                    .fuzzyQueryMerchantByName(fuzzyMerchantPattern)
-                    .stream()
-                    .map(MerchantResponseDto::fromMerchant)
-                    .collect(Collectors.toList());
+        getCacheTtl(cachedMerchants);
 
-            log.info("Querying db complete");
+        refreshCacheTtl(cachedMerchants);
 
-            if (!CollectionUtils.isEmpty(dbMerchants)){
-                log.info("Query result from db, {}", dbMerchants.size());
-                dbMerchants
-                        .stream()
-                        .map(MerchantRedisHash::fromMerchantResponseDto)
-                        .forEach(merchantRedisHashRepository::save);
-                log.info("Db results cached");
+        getCacheTtl(cachedMerchants);
 
-                return dbMerchants;
-            }
 
-            // TODO: Make external query call if db miss
-        }
-        else{
-            log.info("Cache hit - returning cache");
-
-            return cachedMerchant
+        if (CollectionUtils.isEmpty(cachedMerchants)){
+            log.info("MerchantRedisService::fuzzySearch:: cachedMerchant is empty");
+            return List.of();
+        }else{
+            log.info("MerchantRedisService::fuzzySearch:: cachedMerchant is not empty");
+            return cachedMerchants
                     .stream()
                     .map(MerchantResponseDto::fromMerchantRedisHash)
                     .collect(Collectors.toList());
         }
-
-        throw new ResourceNotFoundException(ErrorCode.NOT_FOUND.getErrorCode(),
-                HttpStatus.NOT_FOUND,
-                "Merchant name: " + name + " is not found. Please try again.");
-
-        // TODO: If cache hit -> return result -> refresh cache ttl
     }
 
-    public List<MerchantRedisHash> fuzzySearchHashByPattern(String name){
+
+    private List<MerchantRedisHash> fuzzySearchHashByPattern(String name){
         /*
          * Performs regex search `%{word}%`
          * if there are matches, returns list of Merchants that match the regex
          * if no match, returns empty list
          */
+        log.info("fuzzySearchHashByPattern:: start");
         SearchStream<MerchantRedisHash> stream = entityStream.of(MerchantRedisHash.class);
 
         if (name.matches(".*\\s+.*")){
@@ -94,11 +81,27 @@ public class MerchantRedisService {
             return stream.collect(Collectors.toList());
 
         }else{
-            log.info("name:: {} does not contain space", name);
+//            log.info("name:: {} does not contain space", name);
+            String fuzzyTerm = "*" + name + "*";
+            log.info("fuzzyTerm:: {}", fuzzyTerm);
             return stream
-                    .filter(MerchantRedisHash$.NAME.like("*" + name + "*"))
+                    .filter(MerchantRedisHash$.NAME.like(fuzzyTerm))
                     .collect(Collectors.toList());
 
         }
+    }
+
+    private void refreshCacheTtl(List<MerchantRedisHash> cachedMerchants){
+        cachedMerchants.forEach(merchantRedisHash -> {
+            log.info("refreshCacheTtl:: {} :: {}", merchantRedisHash.getId(), merchantRedisHash.getName());
+            redisTemplate.expire(DEV_CACHE_KEY_PREFIX + merchantRedisHash.getId(), TTL);
+        });
+    }
+
+    private void getCacheTtl(List<MerchantRedisHash> cachedMerchants){
+        cachedMerchants.forEach(merchantRedisHash -> {
+            Long expiration = redisTemplate.getExpire(DEV_CACHE_KEY_PREFIX + merchantRedisHash.getId());
+            log.info("getCacheTtl:: {} :: {} :: {}", merchantRedisHash.getId(), merchantRedisHash.getName(), expiration);
+        });
     }
 }

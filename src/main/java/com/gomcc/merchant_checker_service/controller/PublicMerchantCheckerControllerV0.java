@@ -42,14 +42,14 @@ public class PublicMerchantCheckerControllerV0 {
 
     }
 
-    @GetMapping(path = "/name/fuzzy/{searchWord}")
-    public ResponseEntity<List<MerchantRedisHash>> getSearchWord(
-            @Valid @PathVariable @Pattern(regexp = "[0-9a-zA-Z ]+") String searchWord
-
-    ) {
-            List<MerchantRedisHash> result = merchantRedisService.fuzzySearchHashByPattern(searchWord);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+//    @GetMapping(path = "/name/fuzzy/{searchWord}")
+//    public ResponseEntity<List<MerchantRedisHash>> getSearchWord(
+//            @Valid @PathVariable @Pattern(regexp = "[0-9a-zA-Z ]+") String searchWord
+//
+//    ) {
+//            List<MerchantRedisHash> result = merchantRedisService.fuzzySearchHashByPattern(searchWord);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+//    }
 
     //  ** Below endpoints should be moved to internal endpoints
     @GetMapping(path = "/cache-name")

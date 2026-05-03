@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -45,18 +44,5 @@ public class RedisConfig {
                                 RedisSerializationContext.SerializationPair
                                         .fromSerializer(new JacksonJsonRedisSerializer<>(Merchant.class))))
                 .build();
-    }
-
-    @Bean
-    public RedisTemplate<String, Merchant> redisTemplate(RedisConnectionFactory redisConnectionFactory){
-        RedisTemplate<String, Merchant> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-            redisTemplate.setValueSerializer(new JacksonJsonRedisSerializer<>(Merchant.class));
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new JacksonJsonRedisSerializer<>(Merchant.class));
-
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
     }
 }

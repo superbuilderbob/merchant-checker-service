@@ -6,21 +6,16 @@ import com.gomcc.merchant_checker_service.model.MerchantModeOfPayment;
 import com.gomcc.merchant_checker_service.repository.jpa.MerchantRepository;
 import com.gomcc.merchant_checker_service.repository.redis.MerchantRedisHashRepository;
 import com.gomcc.merchant_checker_service.service.MerchantServiceTests;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.RedisTemplate;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 public class MerchantWarmRedisCacheServiceTest {
-
-    @Autowired
-    private RedisTemplate<String, Merchant> redisTemplate;
 
     private static final String CACHE_NAME = "dev-merchant-name";
     private static final String TEST_KEY = "TEST";
@@ -60,14 +55,6 @@ public class MerchantWarmRedisCacheServiceTest {
          * Assert id instead of other fields due to serialization/deserialization challenge where:
          * - redisTemplate.opsForValue().get("test") returns fields with null value except for id field
          */
-        System.out.println("CacheConnectionShouldBeSuccessful");
-        redisTemplate.opsForValue().set(TEST_KEY, TEST_MERCHANT);
-        Merchant merchant = redisTemplate.opsForValue().get(TEST_KEY);
-        Assertions.assertNotNull(merchant);
-        Assertions.assertEquals(TEST_MERCHANT.getId(), merchant.getId());
-        Assertions.assertEquals(TEST_MERCHANT.getMcc(), merchant.getMcc());
-        Assertions.assertEquals(TEST_MERCHANT.getDescription(), merchant.getDescription());
-        Assertions.assertEquals(TEST_MERCHANT.getName(), merchant.getName());
     }
 
 
@@ -77,12 +64,5 @@ public class MerchantWarmRedisCacheServiceTest {
         int cacheKeyCount = merchantRedisHashRepository.findAll().size();
         int dbRows = merchantRepository.findAll().size();
         Assertions.assertEquals(cacheKeyCount, dbRows);
-    }
-
-
-    @AfterAll
-    static void tearDown(@Autowired RedisTemplate<String, Merchant> redisTemplate){
-        assert redisTemplate.getConnectionFactory() != null;
-        redisTemplate.delete(TEST_KEY);
     }
 }

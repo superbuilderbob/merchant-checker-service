@@ -5,32 +5,24 @@ import com.gomcc.merchant_checker_service.model.Merchant;
 import com.gomcc.merchant_checker_service.model.MerchantRedisHash;
 import com.gomcc.merchant_checker_service.repository.jpa.MerchantRepository;
 import com.gomcc.merchant_checker_service.repository.redis.MerchantRedisHashRepository;
-import com.google.j2objc.annotations.AutoreleasePool;
-import com.redis.om.spring.RedisJSONKeyValueAdapter;
 import com.redis.om.spring.client.RedisModulesClient;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.web.client.RestTemplate;
 import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.IOException;
 import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 /*
     MerchantRedisService:
@@ -48,10 +40,6 @@ public class MerchantRedisServiceTests {
 
     @Autowired
     MerchantRedisHashRepository merchantRedisHashRepository;
-
-    @Autowired
-    RedisTemplate<String, MerchantRedisHash> redisTemplate;
-
 
     @Container
     static final GenericContainer<?> redisContainer = new GenericContainer<>(

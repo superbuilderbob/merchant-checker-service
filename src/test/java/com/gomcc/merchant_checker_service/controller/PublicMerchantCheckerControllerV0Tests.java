@@ -3,18 +3,11 @@ package com.gomcc.merchant_checker_service.controller;
 
 import com.gomcc.merchant_checker_service.exception.ErrorCode;
 import com.gomcc.merchant_checker_service.exception.ResourceNotFoundException;
-import com.gomcc.merchant_checker_service.model.Merchant;
-import com.gomcc.merchant_checker_service.service.CacheInspectionService;
 import com.gomcc.merchant_checker_service.service.MerchantService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;

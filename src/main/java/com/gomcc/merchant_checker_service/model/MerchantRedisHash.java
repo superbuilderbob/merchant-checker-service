@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.index.Indexed;
     @Document(
             value = "dev-merchant",
             indexName = "dev-merchant-idx",
-            timeToLive = 60L)
+            timeToLive = 3600L)
     @Getter
     @Setter
     @Builder
